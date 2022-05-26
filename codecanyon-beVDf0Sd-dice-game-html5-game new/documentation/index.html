@@ -1,0 +1,486 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<head lang="en">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+	<title>Dice Game Documentation</title>
+	<!-- Framework CSS -->
+	<link rel="stylesheet" href="assets/blueprint-css/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="assets/blueprint-css/print.css" type="text/css" media="print">
+	<!--[if lt IE 8]><link rel="stylesheet" href="assets/blueprint-css/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	<link rel="stylesheet" href="assets/blueprint-css/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
+	<style type="text/css" media="screen">
+		p, table, hr, .box { margin-bottom:25px; }
+		.box p { margin-bottom:10px; }
+	</style>
+    <link rel="stylesheet" href="assets/blueprint-css/prettify.css">
+	<script src="assets/js/prettify.js" defer></script>
+    <script>
+	window.onload = (function(){ prettyPrint(); });
+	</script>
+</head>
+
+
+<body>
+	<div class="container">
+	
+		<h3 class="center alt">&ldquo;Dice Game&rdquo; Documentation by &ldquo;demonisblack&rdquo; v1.8</h3>
+		
+		<hr>
+		
+		<h1 class="center">&ldquo;Dice Game&rdquo;</h1>
+		
+		<div class="borderTop">
+			<div class="span-6 colborder info prepend-1">
+				<p class="prepend-top">
+					<strong>
+					Created: 4/19/2016<br>
+					By: demonisblack<br>
+					Email: <a href="mailto:demonisblack@gmail.com">demonisblack@gmail.com</a>
+					</strong>
+				</p>
+			</div><!-- end div .span-6 -->		
+	
+			<div class="span-12 last">
+				<p class="prepend-top append-0">Thank you for purchasing my game. If you have any questions that are beyond the scope of this help file, please feel free to email via my user page contact form <a href="http://codecanyon.net/user/demonisblack">here</a>. Thanks so much!</p>
+			</div>
+		</div><!-- end div .borderTop -->
+		
+		<hr>
+		
+		<h2 id="toc" class="alt">Table of Contents</h2>
+		<ol class="alpha">
+        	<li><a href="#introduction">Introduction</a></li>
+            <li><a href="#gettingStarted">Getting Started</a></li>
+            <li><a href="#htmlStructure">HTML Structure</a></li>
+			<li><a href="#cssFiles">CSS Files and Structure</a></li>
+			<li><a href="#javascript">JavaScript</a></li>
+            <li><a href="#gameFunctions">Game Functions</a></li>
+            <li><a href="#gameAssets">Game Assets</a></li>
+            <li><a href="#compatibility">Compatibility</a></li>
+			<li><a href="#credits">Sources and Credits</a></li>
+            <li><a href="#changelog">Changelog</a></li>
+            <li><a href="#support">Support Policy</a></li>
+		</ol>
+		
+		<hr>
+        
+        <h3 id="introduction"><strong>A) Introduction</strong> - <a href="#toc">top</a></h3>
+        <p>Dice Game is a HTML5 game where you have three dice that will roll to determine if you will win or lose the bet you have placed.</p>
+        
+        <p>The ZIP package contains the game with 1024x768 resolution that scales proportionally to fit current screen device.</p>
+        
+        <p>
+        <strong>How To Play:</strong><br/>
+        1. Click start to begin.<br/>
+        2. Place your bet at the available options and click roll.<br/>
+        3. The dice results a win or loss on your bet.<br/>
+        4. Win as much as possible in 5 minutes.<br/>
+        </p>
+        
+        <hr>
+        
+        <h3 id="gettingStarted"><strong>B) Getting Started</strong> - <a href="#toc">top</a></h3>
+		<p>To install the game just upload folder 'game' to your server. The game won't run locally with some browser like Chrome due to some security mode.</p>
+        <p>You need a website that runs PHP to make facebook share button work, and make sure to change Facebook Open Graph meta and Twitter meta in index.html, just replace [GAME_URL] to your game URL.</p>
+        <pre class="prettyprint linenums">
+        &lt;!-- for Facebook --&gt;
+        &lt;meta property=&quot;og:image&quot; content=&quot;[GAME_URL]/share.jpg&quot; /&gt;
+        &lt;meta property=&quot;og:url&quot; content=&quot;[GAME_URL]&quot; /&gt;
+        
+        &lt;!-- for Twitter --&gt;
+        &lt;meta name=&quot;twitter:image&quot; content=&quot;[GAME_URL]/share.jpg&quot; /&gt;
+        </pre>
+          
+        <p>You can easily customize settings in game.js file
+        <pre class="prettyprint linenums">
+        var backgroundColour = '#fff'; //background colour
+        var textCredit = 'CREDIT : [NUMBER]'; //credit text display
+        var textPaid = 'PAID : [NUMBER]'; //paid text display
+        var textWin = 'WIN : [NUMBER]'; //win text display
+        
+        var gameCredit = 500; //game credit
+        var gameTimer = 300000; //game timer
+        
+        var betAreaColour = '#A7CD2C'; //bet area colour
+        var betAreaHighlightColour = '#F7A21B'; //bet area highlight colour
+        
+        var exitMessage = 'Are you sure you want\nto quit the game?'; //quit game message
+
+        //Social share, [SCORE] will replace with game score
+        var shareEnable = true; //toggle share
+        var shareTitle = 'Highscore on Dice Game is [SCORE]';//social share score title
+        var shareMessage = '[SCORE] is mine new highscore on Dice Game! Try it now!'; //social share score message
+
+        </pre>
+        </p>
+        
+        <p>You can easily customize bet area in array list below
+            <pre class="prettyprint linenums">
+            var area_arr = [{x:25, y:172, width:242, height:221, win:1, type:['BETWEEN[11,17]']},
+                            {x:754, y:172, width:242, height:221, win:1, type:['BETWEEN[4,10]']},
+                            
+                            {x:269, y:171, width:81, height:65, win:150, type:['MATCH[6,6,6]']},
+                            {x:350, y:171, width:81, height:65, win:150, type:['MATCH[5,5,5]']},
+                            {x:430, y:171, width:81, height:65, win:150, type:['MATCH[4,4,4]']},
+                            {x:511, y:171, width:81, height:65, win:150, type:['MATCH[3,3,3]']},
+                            {x:592, y:171, width:81, height:65, win:150, type:['MATCH[2,2,2]']},
+                            {x:673, y:171, width:81, height:65, win:150, type:['MATCH[1,1,1]']},
+                            
+                            {x:270, y:275, width:53, height:78, win:8, type:['MATCH[2,2]']},
+                            {x:323, y:275, width:53, height:78, win:8, type:['MATCH[3,3]']},
+                            {x:376, y:275, width:53, height:78, win:8, type:['MATCH[5,5]']},
+                            {x:429, y:275, width:164, height:117, win:24, type:['MATCH[1,1,1]','MATCH[2,2,2]','MATCH[3,3,3]','MATCH[4,4,4]','MATCH[5,5,5]','MATCH[6,6,6]']},
+                            {x:594, y:275, width:53, height:78, win:8, type:['MATCH[4,4]']},
+                            {x:648, y:275, width:53, height:78, win:8, type:['MATCH[1,1]']},
+                            {x:701, y:275, width:53, height:78, win:8, type:['MATCH[6,6]']},
+                            
+                            {x:26, y:395, width:69, height:107, win:50, type:['TOTAL[17]']},
+                            {x:95, y:395, width:69, height:107, win:18, type:['TOTAL[16]']},
+                            {x:165, y:395, width:69, height:107, win:14, type:['TOTAL[15]']},
+                            {x:234, y:395, width:69, height:107, win:12, type:['TOTAL[14]']},
+                            {x:304, y:395, width:69, height:107, win:8, type:['TOTAL[13]']},
+                            {x:373, y:395, width:69, height:107, win:6, type:['TOTAL[12]']},
+                            {x:443, y:395, width:69, height:107, win:6, type:['TOTAL[11]']},
+                            {x:512, y:395, width:69, height:107, win:6, type:['TOTAL[10]']},
+                            {x:581, y:395, width:69, height:107, win:6, type:['TOTAL[9]']},
+                            {x:651, y:395, width:69, height:107, win:6, type:['TOTAL[8]']},
+                            {x:720, y:395, width:69, height:107, win:12, type:['TOTAL[7]']},
+                            {x:790, y:395, width:69, height:107, win:14, type:['TOTAL[6]']},
+                            {x:860, y:395, width:69, height:107, win:18, type:['TOTAL[5]']},
+                            {x:929, y:395, width:69, height:107, win:50, type:['TOTAL[4]']},
+                            
+                            {x:87, y:501, width:61, height:107, win:5, type:['MATCH[1,2]']},
+                            {x:147, y:501, width:61, height:107, win:5, type:['MATCH[2,4]']},
+                            {x:208, y:501, width:61, height:107, win:5, type:['MATCH[1,4]']},
+                            {x:269, y:501, width:61, height:107, win:5, type:['MATCH[2,3]']},
+                            {x:330, y:501, width:61, height:107, win:5, type:['MATCH[3,4]']},
+                            {x:390, y:501, width:61, height:107, win:5, type:['MATCH[2,5]']},
+                            {x:451, y:501, width:61, height:107, win:5, type:['MATCH[3,5]']},
+                            {x:512, y:501, width:61, height:107, win:5, type:['MATCH[2,6]']},
+                            {x:572, y:501, width:61, height:107, win:5, type:['MATCH[4,5]']},
+                            {x:634, y:501, width:61, height:107, win:5, type:['MATCH[3,6]']},
+                            {x:694, y:501, width:61, height:107, win:5, type:['MATCH[1,5]']},
+                            {x:755, y:501, width:61, height:107, win:5, type:['MATCH[1,6]']},
+                            {x:816, y:501, width:61, height:107, win:5, type:['MATCH[4,6]']},
+                            {x:877, y:501, width:61, height:107, win:5, type:['MATCH[5,6]']},
+                            {x:937, y:501, width:61, height:107, win:5, type:['MATCH[1,3]']},
+                            
+                            
+                            {x:26, y:609, width:162, height:132, win:1, type:['MATCH[6]']},
+                            {x:188, y:609, width:162, height:132, win:1, type:['MATCH[5]']},
+                            {x:350, y:609, width:162, height:132, win:1, type:['MATCH[4]']},
+                            {x:512, y:609, width:162, height:132, win:1, type:['MATCH[3]']},
+                            {x:674, y:609, width:162, height:132, win:1, type:['MATCH[2]']},
+                            {x:836, y:609, width:162, height:132, win:1, type:['MATCH[1]']}
+                            ];
+            </pre>
+            
+            <p>Below is the explanation of each most important array item in 'area_arr' array:</p>
+            <ul>
+                <li><strong>x</strong> - position x</li>
+                <li><strong>y</strong> - position y</li>
+                <li><strong>width</strong> - area width</li>
+                <li><strong>height</strong> - area height</li>
+                <li><strong>win</strong> - win times total</li>
+                <li><strong>type</strong> - win type
+                    <ul>
+                        <li><strong>BETWEEN[11,17]</strong> - dice total amount is more than 11 and  less than 17</li>
+                        <li><strong>MATCH[1,2]</strong> - dice result contain 1 and 2 (up to 3 list)</li>
+                        <li><strong>TOTAL[5]</strong> - dice result amount is equal to 5</li>
+                    </ul>
+                </li>
+            </ul>
+        </p>
+        
+        <p>You can easily customize token in array list below
+            <pre class="prettyprint linenums">
+            //token list	
+            var token_arr = [{src:'assets/token_10.png', credit:10},
+                            {src:'assets/token_50.png', credit:50},
+                            {src:'assets/token_100.png', credit:100}];
+            </pre>
+            
+            <p>Below is the explanation of each most important array item in 'token_arr' array:</p>
+            <ul>
+                <li><strong>src</strong> - image path</li>
+                <li><strong>credit</strong> - total credit (minimum amount of bet is base on lowest credit)</li>
+            </ul>
+        </p>
+        
+        <p>
+        The sound can be easily disabled to avoid compatibility issues in sound.js file:
+        <pre class="prettyprint linenums">
+        var enableMobileSound = true;
+        </pre>
+        </p>
+        
+        <hr>
+		
+		<h3 id="htmlStructure"><strong>C) HTML Structure</strong> - <a href="#toc">top</a></h3>
+        <p>The page start with the loader wrapper that covering the whole screen in the body. It shows loader progress when calls the function <strong>initPreload()</strong></p>
+        <pre class="prettyprint linenums">
+        &lt;!-- PERCENT LOADER START--&gt;
+        &lt;div id=&quot;mainLoader&quot;&gt;0&lt;/div&gt;
+        &lt;!-- PERCENT LOADER END--&gt;
+        </pre>
+        
+        <p>This section is for browser not support page when calls the function <strong>checkBrowser()</strong>. It shows error message when detect the browser does not support canvas.</p>
+        <pre class="prettyprint linenums">
+        &lt;!-- BROWSER NOT SUPPORT START--&gt;
+        &lt;div id=&quot;notSupportHolder&quot;&gt;
+            &lt;div class=&quot;notSupport&quot;&gt;YOUR BROWSER ISN&#39;T SUPPORTED.&lt;br/&gt;PLEASE UPDATE YOUR BROWSER IN ORDER TO RUN THE GAME&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;!-- BROWSER NOT SUPPORT END--&gt;
+        </pre>
+        
+        <p>Device rotate instruction page when calls the function <strong>checkMobileOrientation()</strong>. It shows rotate instruction when device is in portrait view.</p>
+        <pre class="prettyprint linenums">
+        &lt;!-- ROTATE INSTRUCTION START--&gt;
+        &lt;div id=&quot;rotateHolder&quot;&gt;
+            &lt;div class=&quot;mobileRotate&quot;&gt;
+            	&#x3C;div class=&#x22;rotateImg&#x22;&#x3E;&#x3C;img src=&#x22;assets/rotate.png&#x22; /&#x3E;&#x3C;/div&#x3E;
+                &lt;div class=&quot;rotateDesc&quot;&gt;Rotate your device &lt;br/&gt;to landscape&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;!-- ROTATE INSTRUCTION END--&gt;
+        </pre>
+        
+        <p>Follow by one canvas tag in the body. The game start initiatie by calls the main function of the game <strong>initMain()</strong>.</p>
+        <pre class="prettyprint linenums">
+        &lt;!-- CANVAS START--&gt;
+        &lt;div id=&quot;canvasHolder&quot;&gt;
+            &lt;canvas id=&quot;gameCanvas&quot; width=&quot;1024&quot; height=&quot;768&quot;&gt;&lt;/canvas&gt;
+        &lt;/div&gt;
+        &lt;!-- CANVAS END--&gt;
+        </pre>
+		<hr>
+
+		<h3 id="cssFiles"><strong>D) CSS Files and Structure</strong> - <a href="#toc">top</a></h3>
+		<p>I'm using two CSS files in this game. The first one is a generic reset file. Many browser interpret the default behavior of html elements differently. By using a general reset CSS file, we can work round this. This file also contains some general styling, such as anchor tag colors, font-sizes, etc. Keep in mind, that these values might be overridden somewhere else in the file.</p>
+		<p>The second file contains all of the specific stylings for the page.</p>
+        <hr>
+		
+        
+		<h3 id="javascript"><strong>E) JavaScript</strong> - <a href="#toc">top</a></h3>
+		
+		<p>This game using Javascript files below.</p>
+		
+		<ol>
+			<li>
+                <strong>jQuery</strong> is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML.<br/><br/>
+            </li>
+            
+            <li>
+                <strong>Detect Mobile Browser</strong> is a open source scripts to detect mobile browsers and phones.<br/><br/>
+            </li>
+            
+            <li>
+                <strong>CreateJs plugin</strong> is a suite of modular libraries and tools which work together to create interactive content on open web technologies via HTML5.<br/><br/>
+            </li>
+            
+            <li>
+                <strong>TweenMax</strong> is an extremely fast, lightweight, and flexible animation tool that serves as the foundation of the GreenSock Animation Platform (GSAP).<br/><br/>
+            </li>
+            
+            <li>
+                <strong>The game have the following js files</strong>
+                <ul>
+                    <li><strong>init.js :</strong> check if browser or device support <br/><br/></li>
+                    <li><strong>loader.js :</strong> loader to load all game images<br/><br/></li>
+                    <li><strong>main.js :</strong> initiate game setup and browser resize function<br/><br/></li>
+                    <li><strong>mobile.js :</strong> mobile orientation change<br/><br/></li>
+                    <li><strong>canvas.js :</strong> canvas setup and resize<br/><br/></li>
+                    <li><strong>sound.js :</strong> sound event<br/><br/></li>
+                    <li><strong>game.js :</strong> game play and logics<br/><br/></li>
+                    <li><strong>plugins.js :</strong> additonal useful plugins<br/><br/></li>
+                </ul>
+            </li>
+		</ol>
+        
+        <p>Complete game flow:</p>
+		<ol>
+        	<li>The index.html file start init.js for browser detection</li>
+            <li>If browser is supported, init loader.js to start load asserts with loading progress</li>
+            <li>For mobile the rotate instruction shows when device is in portrait view, detect by mobile.js</li>
+            <li>When all asserts contained in "/assets" folder are loaded, the game start construct canvas.js from main.js thats shows game menu</li>
+            <li>If user click the start button in game menu, the game will start with game.js</li>
+            <li>If user click on any avaialble bet options, bet number overlay shows</li>
+            <li>If user click on plus button, bet number will increase.</li>
+            <li>If user click on minus button, bet number will decrease.</li>
+            <li>If user click on bet button, bet number will be placed.</li>
+            <li>If user click on roll button, dice will roll.</li>
+            <li>Number stat will update base on user win or loss.</li>
+            <li>If user click on history button, dice history panel will shows.</li>
+            <li>If user have no more credit, game result will shows</li>
+            <li>If countdown timer is up, game result will shows</li>
+            <li>If user click the replay button in game result, it will restart the game</li>
+        </ol>
+		
+		<hr>
+        
+        <h3 id="gameFunctions"><strong>F) Game Functions</strong> - <a href="#toc">top</a></h3>
+		
+		<p>The most important functions used for page.</p>
+        <ul>
+        	<li>
+                <strong>checkBrowser()</strong><br/>
+                This function is runs for browser detection<br/><br/>
+            </li>
+            
+            <li>
+                <strong>checkMobileEvent()</strong><br/>
+                This function runs for mobile event<br/><br/>
+            </li>
+        </ul>
+        
+        <p>The most important functions used for game.</p>
+        <ul>
+        	<li>
+                <strong>initMain()</strong><br/>
+                This function build canvas<br/><br/>
+            </li>
+            
+            <li>
+                <strong>startGame()</strong><br/>
+                This function start gameplay<br/><br/>
+            </li>
+            
+            <li>
+                <strong>stopGame()</strong><br/>
+                This function stop gameplay<br/><br/>
+            </li>
+
+            <li>
+                <strong>saveGame()</strong><br>
+                This function save game score<br><br>
+            </li>
+            
+            <li>
+                <strong>saveGame()</strong><br/>
+                This function for save score<br/><br/>
+            </li>
+        </ul>
+		<hr>
+        
+        <h3 id="gameAssets"><strong>G) Game Assets</strong> - <a href="#toc">top</a></h3>
+        <p>The game contain 'design' folder which include following:
+        <ol>
+        	<li>dicegame_1024x768.psd - with layer folders below
+                <ul>
+                <li>Result</li>
+                <li>Gameplay</li>
+                <li>Landing</li>
+                <li>Base</li>
+                </ul>
+        	</li>
+        </ol>
+        </p>
+        <p>The folder 'assets' in 'game' folder contains all the images of the game that can be replaced. Is better to have the same size of the old ones if you want to reskin the game graphic without coding.</p>
+		<hr>
+        
+        <h3 id="compatibility"><strong>H) Compatibility</strong> - <a href="#top">top</a></h3>
+		<p>This game is build for Desktop browsers that support HTML5 canvas. Any mobile/tablet should work in landscape view, but they are not officially supported.</p>
+		<hr>
+		
+		<h3 id="credits"><strong>I) Sources and Credits</strong> - <a href="#toc">top</a></h3>
+		
+		<p>I've used the following font and sound files as listed.</p>
+		
+		<ul>
+			<li><a href="http://www.dafont.com/built-titling.font" target="_blank">built-titling</a> from file Typodermic Fonts</li>
+            <li><a href="http://freesound.org/people/GOSFX/sounds/323402/" target="_blank">Sound 2.mp3</a> from file GOSFX</li>
+            <li><a href="http://freesound.org/people/MaxDemianAGL/sounds/130040/" target="_blank">Dices_throw02.wav</a> from file MaxDemianAGL</li>
+            <li><a href="http://freesound.org/people/Cooltron/sounds/332919/" target="_blank">WinLevel.wav</a> from file cooltron</li>
+            <li><a href="http://freesound.org/people/fartheststar/sounds/201807/" target="_blank">poker_chips1.wav</a> from file fartheststar</li>
+            <li><a href="http://www.flashkit.com/loops/Ambient/Ambient/cool_gro-Eduardo_-10181/index.php" target="_blank"> cool grove
+</a> from file  	Eduardo Mena</li>
+            
+            <li><a href="http://freesound.org/people/cablique/sounds/152765/" target="_blank">Electronic Claves</a> from file cablique</li>
+            <li><a href="http://freesound.org/people/Soughtaftersounds/sounds/217845/" target="_blank">Quick Piano End 2</a> from file Soughtaftersounds</li>
+		</ul>
+		
+		<hr>
+        
+        <h3 id="changelog"><strong>J) Changelog</strong> - <a href="#toc">top</a></h3>
+
+        Version 1.8
+		<ul>
+			<li>Add-on script integrated</li>
+		</ul>
+
+        Version 1.7
+        <ul>
+			<li>Add-on script integrated</li>
+		</ul>
+        
+        Version 1.6
+        <ul>
+			<li>Added settings option</li>
+            <li>Option to disable share option</li>
+    		<li>Update Google to Whatsapp share</li>
+		</ul>
+        
+        Version 1.5
+		<ul>
+			<li>Compatible with Membership and Rewards System add-on</li>
+		</ul>
+        
+		Version 1.4
+		<ul>
+			<li>Fixed audio not playing in Chrome browser</li>
+		</ul>
+        
+        Version 1.3
+		<ul>
+			<li>Fixed dice random numbers</li>
+		</ul>
+
+        Version 1.2
+		<ul>
+			<li>Fixed iOS Safari fullscreen</li>
+		</ul>
+        
+		Version 1.1
+        <ul>
+        	<li>Fixed Facebook share issue</li>
+        </ul>
+		
+		<hr>
+		
+		<h3 id="support"><strong>K) Support Policy</strong> - <a href="#toc">top</a></h3>
+
+		<p>Check out support policy <a href="http://demonisblack.com/code/support-policy/">here</a>.</p>
+
+        <strong>Ad Placeholder</strong><br/>
+        <p>
+            Help simulate ads on HTML5 Games, you can integrate and display static and takeover ads through different Ads Serving Platform.<br>
+            <a href="https://demonisblack.com/code/ads/" target="_blank">> Documentation</a>
+        </p>
+
+        <strong>Instant Games – Facebook</strong><br/>
+        <p>
+            Guide you through integrating Facebook Instant Games API in our HTML5 Games.<br>
+            <a href="https://demonisblack.com/code/instantgames/" target="_blank">> Documentation</a>
+        </p>
+		<hr>
+		
+		<p>Once again, thank you so much for purchasing this game, if you have a more general question relating to the games on CodeCanyon, you might consider visiting the item page in the <a href="https://codecanyon.net/item/dice-game-html5-game/15855525/support">"Support"</a> section.</p>
+		<p>If you like the game, please take a moment to rate it. Thanks!   <img src="assets/images/rate.png" /><img src="assets/images/rate.png" /><img src="assets/images/rate.png" /><img src="assets/images/rate.png" /><img src="assets/images/rate.png" /></p>
+        
+        <p>
+        	<h3>How to rate an item on CodeCanyon?</h3>
+            If you want to rate one of our items on CodeCanyon please do it like this:
+            <ol>
+                <li>Login to CodeCanyon</li>
+                <li>Open the menu on the top right, and click onto the link “Downloads” which shows a list of your downloads</li>
+                <li>Rate our items using the stars</li>
+                <li>That’s it. Thank you very much!</li>
+            </ol>
+        </p>
+		
+		<p class="append-bottom alt large"><strong>demonisblack</strong></p>
+		<p><a href="#toc">Go To Table of Contents</a></p>
+		
+		<hr class="space">
+	</div><!-- end div .container -->
+</body>
+</html>
