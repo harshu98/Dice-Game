@@ -16,7 +16,7 @@ var gameTimer = 0; //game timer
 var finalAmount = 0; //final amount
 var betAreaColour = "#A7CD2C"; //bet area colour
 var betAreaHighlightColour = "#F7A21B"; //bet area highlight colour
-
+var postData = {};
 
 //bet options
 var area_arr = [
@@ -70,10 +70,10 @@ var area_arr = [
     { x: 574, y: 522, width: 65, height: 107, win: 5, type: ["MATCH[1,3]"] }, //5
 
 
-    { x: 1327, y: 412, width: 197, height: 77, win: 3, type: ["MATCH[6]"] },
-    { x: 1128, y: 412, width: 197, height: 77, win: 3, type: ["MATCH[5]"] },
-    { x: 929, y: 412, width: 197, height: 77, win: 2, type: ["MATCH[4]"] },
-    { x: 731, y: 412, width: 197, height: 77, win: 2, type: ["MATCH[3]"] },
+    { x: 1327, y: 412, width: 197, height: 77, win: 1, type: ["MATCH[6]"] },
+    { x: 1128, y: 412, width: 197, height: 77, win: 1, type: ["MATCH[5]"] },
+    { x: 929, y: 412, width: 197, height: 77, win: 1, type: ["MATCH[4]"] },
+    { x: 731, y: 412, width: 197, height: 77, win: 1, type: ["MATCH[3]"] },
     { x: 534, y: 412, width: 197, height: 77, win: 1, type: ["MATCH[2]"] },
     { x: 336, y: 412, width: 197, height: 77, win: 1, type: ["MATCH[1]"] },
     { x: 810, y: 632, width: 120, height: 60, win: 1, type: ["ODD"] },
@@ -81,7 +81,8 @@ var area_arr = [
 ];
 
 //token list	
-var token_arr = [{ src: "assets/token_10.png", credit: 0.01 },
+var token_arr = [
+    // { src: "assets/token_10.png", credit: 0.01 },
     { src: "assets/token_50.png", credit: 0.05 },
     { src: "assets/token_100.png", credit: 0.1 },
     { src: "assets/token_150.png", credit: 0.5 },
@@ -89,9 +90,9 @@ var token_arr = [{ src: "assets/token_10.png", credit: 0.01 },
 ];
 
 var exitMessage = "Are you sure you want\nto quit the game?"; //quit game message
-
+let transbet = {};
 //Social share, [SCORE] will replace with game score
-var shareEnable = true; //toggle share
+var shareEnable = false; //toggle share
 var shareTitle = "Highscore on Dice Game is [SCORE]"; //social share score title
 var shareMessage = "[SCORE] is mine new highscore on Dice Game! Try it now!"; //social share score message
 
@@ -193,8 +194,6 @@ function buildGameButton() {
 
     buttonRoll.cursor = "pointer";
     buttonRoll.addEventListener("click", function(evt) {
-        playSound('soundDice');
-        // console.log('clicked')
         toggleRollDiceAnimation(true);
     });
 
@@ -367,7 +366,7 @@ function goPage(page) {
 
         case 'result':
             targetContainer = resultContainer;
-            txtScore.text = finalAmount;
+            txtScore.text = playerData.win;
             stopGame();
             saveGame(playerData.win);
             playSound('soundResult');
@@ -588,37 +587,39 @@ function toggleRollDiceButton(con) {
  * 
  */
 async function toggleRollDiceAnimation(con) {
+    const phantomWallet = cryptoUtils.phantomWallet;
 
-    const phantomWallet = new PhantomWallet();
-    // console.log(playerData.bet);
-    // console.log(con);
     if (con == true) {
-        await phantomWallet.requestTransaction(playerData.bet, "AV1h6WN1mAS2zv5m1JxwFL5D7ne4sxKoj8unZsrC7zLv").then(result => {
+        document.getElementById("gif").style.display = "block";
+        await phantomWallet.requestTransaction(playerData.bet).then(result => {
             {
-                Notify("Transaction Successful")
-                    // console.log("Hi");
-                con = true
+                transbet = {
+                    "walletID": phantomWallet.wallet_pubkey,
+                    "gameName": "Dice Game",
+                    "userTransactionID": result,
+                    "typeOfPlay": "SOL",
+                    "betAmount": playerData.bet,
+                };
+                // console.log(transbet);
+                Notify("Transaction Successful");
+                document.getElementById("gif").style.display = "none";
+                con = true;
+                playSound('soundDice');
                 toggleRollDiceButton();
                 toggleBetOption(false);
             }
         }).catch((err) => {
-            Notify("Please Approve Transaction")
-                // console.log(err);
+            Notify("Please Approve Transaction");
+            document.getElementById("gif").style.display = "none";
             con = false
             buttonRollDisabled.visible = false;
         });
     }
-
-    // toggleRollDiceButton();
-    // toggleBetOption(false);
-    // console.log(con);
     if (con == true) {
-        // console.log(con);
         //memberpayment
         if (typeof memberData != 'undefined' && memberSettings.enableMembership) {
             updateUserPoint();
         }
-
         gameData.roll = true;
         gameData.rollInterval = setInterval(function() {
             toggleRollDiceAnimation(false);
@@ -683,7 +684,7 @@ function setBetNumber() {
         playerData.slot[gameData.slotID].amount = gameData.betNumber;
         updateBet = true;
     }
-    tokenContainer.removeAllChildren();
+    // tokenContainer.removeAllChildren();
     // console.log(updateBet);
     // console.log(playerData);
     for (n = 0; n < playerData.slot.length; n++) {
@@ -696,16 +697,15 @@ function setBetNumber() {
                     placeToken(n, playerData.slot[n].amount);
                 }
             }
+        } else {
+            if (gameData.slotID == n) {
+                // console.log(updateBet);
+                // console.log(gameData.slotID);
+                if (updateBet) {
+                    placeToken(n, playerData.slot[n].amount);
+                }
+            }
         }
-        //  else {
-        //     if (gameData.slotID == n) {
-        //        // console.log(updateBet);
-        //        // console.log(gameData.slotID);
-        //         if (updateBet) {
-        //             placeToken(n, playerData.slot[n].amount);
-        //         }
-        //     }
-        // }
     }
     playerData.bet = playerData.newBet;
     playerData.creditSum = playerData.credit - playerData.bet;
@@ -734,7 +734,7 @@ function placeToken(slot, betNumber, anime) {
     var checkBetNumber = Number(betNumber).toFixed(3);
 
     //remove old tokens
-    for (t = 0; t < playerData.slot[slot].tokens.length; t++) {
+    for (t = 0; t < playerData.slot[slot].tokens; t++) {
         // console.log("Hi");
         tokenContainer.removeChild($.token[slot + '-' + t]);
     }
@@ -831,9 +831,9 @@ function updateBetNumber() {
  */
 
 function updateStat() {
-    txtCredit.text = textCredit.replace('[NUMBER]', Number(playerData.creditSum).toFixed(10));
-    txtPaid.text = textPaid.replace('[NUMBER]', (playerData.paid).toFixed(5));
-    txtWin.text = textWin.replace('[NUMBER]', (playerData.win).toFixed(5));
+    txtCredit.text = textCredit.replace('[NUMBER]', Number(playerData.creditSum).toFixed(7));
+    txtPaid.text = textPaid.replace('[NUMBER]', (playerData.paid).toFixed(6));
+    txtWin.text = textWin.replace('[NUMBER]', (playerData.win).toFixed(6));
 }
 
 /*!
@@ -843,6 +843,7 @@ function updateStat() {
  */
 var playWinSound = false;
 var winslot_arr = [];
+var bet_array_slots = [];
 
 function checkBetWinAnimation() {
     gameData.dice[0] = Number(diceAnimate1.currentFrame + 1);
@@ -854,11 +855,16 @@ function checkBetWinAnimation() {
     var winRemain = 0;
     animationCompleteReady = false;
     animateChipsOnce = false;
-
     playWinSound = false;
     winslot_arr = [];
+    bet_array_slots = [];
     for (n = 0; n < playerData.slot.length; n++) {
         if (playerData.slot[n].amount > 0) {
+            bet_array_slots.push({
+                "amount": playerData.slot[n].amount,
+                "betArea": area_arr[n].type.toString(),
+                "multiplier": area_arr[n].win,
+            })
             paid += playerData.slot[n].amount;
             if (checkWinType(area_arr[n].type)) {
                 winRemain += playerData.slot[n].amount;
@@ -867,7 +873,6 @@ function checkBetWinAnimation() {
                 // console.log(win);
                 winslot_arr.push({ slot: n, amount: playerData.slot[n].amount * area_arr[n].win });
                 // console.log(winslot_arr);
-                finalAmount += winRemain + win;
                 playWinSound = true;
             };
         }
@@ -884,7 +889,7 @@ function checkBetWinAnimation() {
     if (typeof memberData == 'undefined') {
         playerData.credit -= paid;
     }
-
+    finalAmount = win + winRemain;
     playerData.credit += win;
     playerData.credit += winRemain;
     playerData.paid += paid;
@@ -892,7 +897,25 @@ function checkBetWinAnimation() {
     playerData.bet = 0;
 
     playerData.creditSum = playerData.credit - playerData.bet;
-
+    let diceSum = 0;
+    for (let i = 0; i < gameData.dice.length; i++) {
+        diceSum += gameData.dice[i];
+    }
+    // console.log(diceSum);
+    postData = {
+            ...transbet,
+            "betNumbers": bet_array_slots,
+            "gameDice": gameData.dice.toString(),
+            "amountWon": finalAmount,
+            "diceSumResult": diceSum,
+            "gameResult": playerData.win > 0 ? "WIN" : "LOSS",
+            "amountLost": playerData.win >= transbet['betAmount'] ? 0 : Number(transbet['betAmount'] - playerData.win),
+            'amountPaid': (playerData.win - (playerData.win * 0.015)),
+        }
+        // console.log(postData);
+    axios.post(`${DB_URL}/api/diceGame`, {
+        ...postData
+    });
     //memberpayment
     if (typeof memberData != 'undefined' && memberSettings.enableMembership) {
         updateUserPoint();
@@ -1065,6 +1088,10 @@ function checkWinType(type) {
                 return true;
             }
         }
+        // else if (type[w].substring(0, 6) == "SINGLE") {
+        //     match_arr = type[w].substring(7, type[w].length - 1).split(',');
+        //     let gamediceNum = gameData.dice;
+        // }
     }
 
     return false;

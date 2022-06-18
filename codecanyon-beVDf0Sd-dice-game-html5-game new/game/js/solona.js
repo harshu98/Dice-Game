@@ -1,11 +1,13 @@
-const clusterApiUrl = solanaWeb3.clusterApiUrl("testnet");
+const clusterApiUrl = solanaWeb3.clusterApiUrl("devnet");
 const recipient_pubkey = "..";
+const DB_URL = "https://solanaarcadegames.herokuapp.com";
 class PhantomWallet {
     constructor() {
         this.wallet_pubkey = null;
         this.cur_transac_err = null;
         this.lastTransacId = null;
         this.isConnected = false;
+        this.isAuthenticated = false;
     }
     async connectWallet() {
         //prompts user
@@ -17,6 +19,7 @@ class PhantomWallet {
             return true;
         } else {
             console.error("phantom wallet connect: no phantom wallet found");
+            document.getElementById("walletLost").style.display = "block";
             return false;
         }
     }
@@ -44,8 +47,8 @@ class PhantomWallet {
         }
     }
 
-    async requestTransaction(lamports, to_pubkey) {
-        const transamount = Number((4 / 100) * lamports);
+    async requestTransaction(lamports) {
+        const transamount = Number((3 / 100) * lamports);
         // console.log(transamount);
         // console.log(lamports);
         this.cur_transac_err = null;
@@ -58,7 +61,7 @@ class PhantomWallet {
         let onOtherErr = (s_err_) => (s_err = s_err_);
         let signature = await this.createPhantomTransaction(
             clusterApiUrl,
-            to_pubkey,
+            "Gy4xSKsLHXScRMVZgKt5f6BvDawp1JW8PrenA3GbakCK",
             sol * solanaWeb3.LAMPORTS_PER_SOL,
             onTransacErr,
             onOtherErr,
@@ -154,7 +157,7 @@ class PhantomWallet {
         // console.log("hi");
         // console.log(this.wallet_pubkey);
         const connection = new solanaWeb3.Connection(
-            solanaWeb3.clusterApiUrl('testnet'),
+            solanaWeb3.clusterApiUrl('devnet'),
             'confirmed',
         );
         // console.log(new solanaWeb3.PublicKey(this.wallet_pubkey));
@@ -164,8 +167,109 @@ class PhantomWallet {
     walletPubkey() {
         return this.wallet_pubkey;
     }
-}
 
+    async signMessage() {
+        const data = await fetch(`${DB_URL}/connect`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                publicKey: this.wallet_pubkey,
+            }),
+        });
+        const result = await data.json();
+        const message = `I am Logging into Solana Arcade Games ${result}`;
+        const encodedMessage = new TextEncoder().encode(message);
+
+        const { signature, publicKey } = await window.solana.signMessage(
+            encodedMessage
+        );
+
+        let userDetails;
+
+        try {
+            let {
+                data: { country_name, region, city, ip },
+            } = await axios("https://ipapi.co/json/");
+            console.log(country_name, region, city, ip);
+            userDetails = {
+                countryName: country_name,
+                city: city,
+                region: region,
+                ip: ip,
+            };
+        } catch (error) {
+            userDetails = {
+                countryName: "",
+                city: "",
+                region: "",
+                ip: "",
+            };
+        }
+
+        const { data: signData } = await axios.post(`${DB_URL}/sign`, {
+            signature,
+            publicKey: publicKey.toBytes(),
+            key: this.wallet_pubkey,
+            userData: {
+                walletID: this.wallet_pubkey,
+                ...userDetails,
+            },
+        });
+        console.log(signData);
+        if (signData) {
+            axios.defaults.headers.common["Authorization"] = signData.accessToken;
+            localStorage.setItem("user", JSON.stringify(signData));
+            const phantomObject = cryptoUtils.phantomWallet;
+            phantomObject.isAuthenticated = true;
+        } else {
+            alert("Invalid Credentials");
+        }
+    }
+}
 window.cryptoUtils = {
     phantomWallet: new PhantomWallet(),
 };
+
+async function initPhantomWallet() {
+    try {
+        const phantomObject = cryptoUtils.phantomWallet;
+        let user = localStorage.getItem("user");
+        await phantomObject.connectWallet();
+
+        user = JSON.parse(user);
+
+        if (!!user && parseJwt(user.accessToken) === phantomObject.wallet_pubkey) {
+            axios.defaults.headers.common["Authorization"] = user.accessToken;
+            phantomObject.isAuthenticated = true;
+        } else {
+            console.log("No user found");
+            await phantomObject.connectWallet();
+            await phantomObject.signMessage();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+initPhantomWallet();
+
+function parseJwt(token) {
+    var base64Url = token.split(".")[1];
+    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    var jsonPayload = decodeURIComponent(
+        atob(base64)
+        .split("")
+        .map(function(c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+    const { exp, walletID } = JSON.parse(jsonPayload);
+
+    if (Date.now() >= exp * 1000) {
+        return null;
+    }
+
+    return walletID;
+}

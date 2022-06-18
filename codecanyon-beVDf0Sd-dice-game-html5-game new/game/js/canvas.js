@@ -63,16 +63,16 @@ function buildGameCanvas() {
     creditspanel.x = canvasW / 20;
     creditspanel.y = canvasH / 90;
     winpanel = new createjs.Bitmap(loader.getResult('winpanel'));
-    winpanel.x = canvasW / 9;
-    winpanel.y = canvasH / 9;
+    winpanel.x = canvasW / 150;
+    winpanel.y = canvasH / 5;
     paidpanel = new createjs.Bitmap(loader.getResult('paidpanel'));
     paidpanel.x = canvasW / 300;
     paidpanel.y = canvasH / 9;
 
     wallet = new createjs.Bitmap(loader.getResult('wallet'));
     centerReg(wallet);
-    wallet.x = canvasW / 100 * 92;
-    wallet.y = canvasH / 6;
+    wallet.x = canvasW / 100 * 85;
+    wallet.y = canvasH / 16;
 
     buttonStart = new createjs.Bitmap(loader.getResult('buttonStart'));
     centerReg(buttonStart);
@@ -91,8 +91,8 @@ function buildGameCanvas() {
     buttonRoll.x = buttonRollDisabled.x = buttonStart.x = canvasW / 1.685;
     buttonRoll.y = buttonRollDisabled.y = buttonStart.y = canvasH / 100 * 20;
 
-    buttonHistory.x = canvasW / 100 * 13;
-    buttonHistory.y = canvasH / 100 * 25;
+    buttonHistory.x = canvasW / 100 * 20;
+    buttonHistory.y = canvasH / 100 * 15;
 
     historyContainer.x = -canvasW;
     historyContainer.y = canvasH / 100 * 30;
@@ -183,47 +183,47 @@ function buildGameCanvas() {
     tokenIcon.y = canvasH / 20;
 
     walletId = new createjs.Text();
-    walletId.font = "20px Casino";
+    walletId.font = "23px Helvetica";
     walletId.color = "#e6e3e3";
     walletId.textAlign = "left";
     walletId.textBaseline = 'alphabetic';
 
-    walletId.x = canvasW / 100 * 88;
-    walletId.y = canvasH / 5.75;
+    walletId.x = canvasW / 100 * 81.4;
+    walletId.y = canvasH / 14;
 
     txtCredit = new createjs.Text();
-    txtCredit.font = "20px Casino";
+    txtCredit.font = "25px Helvetica";
     txtCredit.color = "#e6e3e3";
     txtCredit.text = 0;
     txtCredit.textAlign = "left";
     txtCredit.textBaseline = 'alphabetic';
 
     txtPaid = new createjs.Text();
-    txtPaid.font = "20px Casino";
+    txtPaid.font = "25px Helvetica";
     txtPaid.color = "#e6e3e3";
     txtPaid.text = 0;
     txtPaid.textAlign = "left";
     txtPaid.textBaseline = 'alphabetic';
 
     txtWin = new createjs.Text();
-    txtWin.font = "20px Casino";
+    txtWin.font = "25px Helvetica";
     txtWin.color = "#e6e3e3";
     txtWin.text = 0;
     txtWin.textAlign = "left";
     txtWin.textBaseline = 'alphabetic';
 
-    txtCredit.x = canvasW / 100 * 10.5;
-    txtCredit.y = canvasH / 100 * 6;
-    txtPaid.x = canvasW / 100 * 4;
-    txtPaid.y = canvasH / 100 * 15;
-    txtWin.x = canvasH / 100 * 30;
-    txtWin.y = canvasH / 100 * 15.2;
+    txtCredit.x = canvasW / 100 * 13.5;
+    txtCredit.y = canvasH / 100 * 7.4;
+    txtPaid.x = canvasW / 100 * 7.8;
+    txtPaid.y = canvasH / 100 * 17.8;
+    txtWin.x = canvasH / 100 * 16;
+    txtWin.y = canvasH / 100 * 26.8;
 
     //memberpayment
     if (typeof memberData != 'undefined') {
-        txtCredit.font = "30px Casino";
-        txtWin.font = "30px Casino";
-        txtPaid.font = "30px Casino";
+        txtCredit.font = "30px Helvetica";
+        txtWin.font = "30px Helvetica";
+        txtPaid.font = "30px Helvetica";
 
         txtCredit.x = txtPaid.x = txtWin.x = canvasW / 100 * 3;
         txtCredit.y = canvasH / 100 * 13;
@@ -232,7 +232,7 @@ function buildGameCanvas() {
     }
 
     txtTime = new createjs.Text();
-    txtTime.font = "70px Casino";
+    txtTime.font = "70px Helvetica";
     txtTime.color = "#000000";
     txtTime.text = '';
     txtTime.textAlign = "center";
@@ -241,7 +241,7 @@ function buildGameCanvas() {
     txtTime.y = canvasH / 100 * 10;
 
     txtBetNumber = new createjs.Text();
-    txtBetNumber.font = "70px Casino";
+    txtBetNumber.font = "70px Helvetica";
     txtBetNumber.color = "#ffffff";
     txtBetNumber.text = 0;
     txtBetNumber.textAlign = "center";
@@ -270,7 +270,7 @@ function buildGameCanvas() {
     result.y = canvasH / 4;
 
     txtScore = new createjs.Text();
-    txtScore.font = "60px Casino";
+    txtScore.font = "60px Helvetica";
     txtScore.color = "#fff";
     txtScore.text = 0;
     txtScore.textAlign = "center";
@@ -338,7 +338,7 @@ function buildGameCanvas() {
     buttonCancel.y = canvasH / 100 * 63;
 
     confirmMessageTxt = new createjs.Text();
-    confirmMessageTxt.font = "40px Casino";
+    confirmMessageTxt.font = "40px Helvetica";
     confirmMessageTxt.lineHeight = 65;
     confirmMessageTxt.color = "#fff";
     confirmMessageTxt.textAlign = "center";
@@ -378,10 +378,10 @@ function buildGameCanvas() {
  */
 function resizeCanvas() {
     if (canvasContainer != undefined) {
-        buttonSettings.x = (canvasW - offset.x) - 100;
-        buttonSettings.y = offset.y + 30;
+        buttonSettings.x = (canvasW - offset.x) - 60;
+        buttonSettings.y = offset.y + 50;
 
-        var distanceNum = 60;
+        var distanceNum = 70;
         if (curPage != 'game') {
             buttonExit.visible = false;
             buttonSoundOn.x = buttonSoundOff.x = buttonSettings.x;

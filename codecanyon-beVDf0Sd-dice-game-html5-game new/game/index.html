@@ -9,23 +9,23 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dice Game</title>
-    <meta name="Title" content="Dice Game" />
-    <meta name="description" content="Dice Game is a HTML5 game where you have three dice that will roll to determine if you will win or lose the bet you have placed.">
+    <title>Elysium dice game</title>
+    <meta name="Title" content="Elysium dice game" />
+    <meta name="description" content="Elysium dice game is a HTML5 game where you have three dice that will roll to determine if you will win or lose the bet you have placed.">
     <meta name="keywords" content="casino, gamble, dice, slot, poker, chips, board, win, loss, big, small, chinese">
 
     <!-- for Facebook -->
-    <meta property="og:title" content="Dice Game" />
-    <meta property="og:site_name" content="Dice Game" />
-    <meta property="og:image" content="http://demonisblack.com/code/2016/dicegame/game/share.jpg" />
+    <meta property="og:title" content="Elysium dice game" />
+    <meta property="og:site_name" content="Elysium dice game" />
+    <meta property="og:image" content="./assets/dicegamecard.png" />
     <meta property="og:url" content="http://demonisblack.com/code/2016/dicegame/game/" />
-    <meta property="og:description" content="Dice Game is a HTML5 game where you have three dice that will roll to determine if you will win or lose the bet you have placed.">
+    <meta property="og:description" content="Elysium dice game is a HTML5 game where you have three dice that will roll to determine if you will win or lose the bet you have placed.">
 
     <!-- for Twitter -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Dice Game" />
-    <meta name="twitter:description" content="Dice Game is a HTML5 game where you have three dice that will roll to determine if you will win or lose the bet you have placed." />
-    <meta name="twitter:image" content="http://demonisblack.com/code/2016/dicegame/game/share.jpg" />
+    <meta name="twitter:title" content="Elysium dice game" />
+    <meta name="twitter:description" content="Elysium dice game is a HTML5 game where you have three dice that will roll to determine if you will win or lose the bet you have placed." />
+    <meta name="twitter:image" content="./assets/dicegamecard.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <script>
@@ -75,12 +75,16 @@
             <canvas id="gameCanvas" width="1580" height="768" style="background: url('./assets/dicebg.png'); background-repeat: no-repeat;
             background-size:100% 100%;"></canvas>
         </div>
+        <div id="walletLost">
+            <h1>Wallet Not Available</h1>
+        </div>
         <!-- CANVAS END-->
-
     </div>
+    <img src="./assets/ezgif.gif" id="gif" style="width: 100%; height: 99.5%;position: absolute;z-index: 1;display: none;">
     <!-- CONTENT END-->
-
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
         window.jQuery || document.write('<script src="js/vendor/jquery.min.js">')
     </script>
